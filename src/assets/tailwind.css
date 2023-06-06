@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.input-text{
+    @apply mt-6 w-[100%] pl-6 bg-transparent text-gray-200 placeholder-gray-200 rounded-md bg-gray-500 py-2
+}
+.button{
+    @apply bg-gray-600 px-4 py-2 rounded-md text-gray-200 font-semibold uppercase hover:bg-gray-500
+}
+.container{
+    @apply w-[80%] xs:w-[70%] md:w-[60%] lg:w-[40%]
+}
+.input_rooms{
+    @apply w-[80%] mt-4 p-2 text-center rounded-md bg-transparent ring-1 ring-gray-300 text-white
+}
+
