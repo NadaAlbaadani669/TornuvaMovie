@@ -105,7 +105,7 @@ const login = async()=>{
             //     "username_or_email": email.value,
             //     "password": password.value
             // });
-            localStorage.setItem("token", JSON.stringify(data.user.getIdToken()));        
+            localStorage.setItem("token", JSON.stringify(data.user.getIdToken));        
             router.push({name:'Home'});
         })
         .catch((error) => {
