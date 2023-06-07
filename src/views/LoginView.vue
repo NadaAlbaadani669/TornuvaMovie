@@ -56,6 +56,7 @@
                 </div>
             </div>
         <!--First component End-->
+        
     </div>
 </template>
 
@@ -126,8 +127,9 @@ const googleLogin = ()=>{
     signInWithPopup(auth, Googleprovider)
         .then(async(data)=>{
             // console.log(await(data.user.getIdToken()))
-            token.value = await(data.user.getIdToken());
-            // console.log(token.value);
+            token.value = await data.user.getIdToken();
+            console.log(await data.user.getIdToken());
+            console.log(data.user.accessToken);
             localStorage.setItem("token", JSON.stringify(token.value));      
             router.push({name:'Home'});
            

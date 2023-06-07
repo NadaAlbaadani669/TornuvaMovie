@@ -140,10 +140,10 @@ connect();
 setTimeout(() => {
     if (rooms.value.length === 0 && socket.value.readyState !== 1) {
         showOtherDevice.value = true;
-        setInterval(()=>{
-            // socket.value.close();
-            window.location.reload();              
-        },5000);   
+        // setInterval(()=>{
+        //     // socket.value.close();
+        //     window.location.reload();              
+        // },5000);   
     };
 },1000);
 

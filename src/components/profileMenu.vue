@@ -5,7 +5,7 @@
                 <img class="h-11 w-11 rounded-full ring-1 ring-gray-400" :src="props.userInfoL.image" alt="">
                 <div class="absolute bg-green-500 w-2 h-2 right-2 bottom-1 rounded-full ring-1 ring-white"></div>
             </div> 
-            <div class="ml-2">
+            <div class="ml-4">
                 <h3 class="text-xl">{{ props.userInfoL.name }}</h3>
                 <h4 >{{ props.userInfoL.email }}</h4> 
             </div>                                  

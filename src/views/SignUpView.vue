@@ -24,8 +24,7 @@ import {ref} from 'vue'
 import router from '../router';
 import axios from 'axios';
 import { userInfoStore } from '../Store/user';
-import {getAuth, createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
-import PathSelect from '../components/PathSelect.vue';
+import {getAuth, createUserWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth';
 
 const userInfoState = userInfoStore();
 const {addUser} = userInfoState;
@@ -57,10 +56,14 @@ const registerEvent = async()=>{    //async
 if(password.value === password2.value){
     createUserWithEmailAndPassword(getAuth(), email.value, password.value)
         .then((data) => {
-            // updateProfile(user, { displayName: name.value });
-            // data.user.auth.name = name.value;
-            console.log(data.user.accessToken);
-            console.log(data.user.auth.name);
+            onAuthStateChanged(getAuth(), (user) => {
+                if (user) {
+                    console.log(user);
+                    // ...
+                } else {
+                    alert("You are signed out Please sign in to continue.")
+                }
+                });
             
         })
         .catch((error)=>{
