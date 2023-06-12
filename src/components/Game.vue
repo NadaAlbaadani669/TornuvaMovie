@@ -191,7 +191,7 @@ const logOut = () => {
     // socketRoom.value.close(
     //     console.log("Room Socket Have Been Closed")
     // );
-    localStorage.removeItem('token');
+    localStorage.clear();
     router.push({name: "Login"});
 };
 

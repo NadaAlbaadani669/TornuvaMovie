@@ -58,10 +58,10 @@ if(password.value === password2.value){
         .then((data) => {
             onAuthStateChanged(getAuth(), (user) => {
                 if (user) {
-                    console.log(user);
-                    // ...
+                    localStorage.setItem("token", JSON.stringify(token.value));      
+                    router.push({name:'Home'});
                 } else {
-                    alert("You are signed out Please sign in to continue.")
+                    alert("You are signed out Please sign in to continue.");
                 }
                 });
             

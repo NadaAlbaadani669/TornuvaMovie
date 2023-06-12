@@ -65,7 +65,7 @@ import axios from 'axios';
 import {ref} from 'vue';
 import { userInfoStore } from '../Store/user';
 import {useRouter} from 'vue-router';
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider,  TwitterAuthProvider} from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider,  TwitterAuthProvider} from 'firebase/auth';
 
 
 const email = ref("");
@@ -79,12 +79,60 @@ const Googleprovider = new GoogleAuthProvider();
 const Twitterprovider = new  TwitterAuthProvider();
 const auth = getAuth();
 const token = ref('');
+const userLogedin = ref(false);
 
 const userInfoState = userInfoStore();
 const {addUser} = userInfoState;
 
+onAuthStateChanged(auth, (user)=>{
+    if(user){
+        userLogedin.value = true;
+    }
+    else{
+        userLogedin.value = false
+    }
+});
+
+const loginWithGoogle = ()=>{
+    signInWithPopup(auth, Googleprovider)
+            .then(async(data)=>{
+                token.value = await data.user.getIdToken();
+                console.log(token.value)
+                // try{
+                //     const response = await axios.post(`https://apisrv0001.tournamovie.com/register`,{
+                //         headers: {
+                //             Authorization: `Bearer ${token.value}`,
+                //         },
+                //         "email": data.user.email,
+                //         "name": data.user.displayName
+                //     });
+                //     console.log(response.data);
+                // }catch(error){
+                //     errorMes.value= error.response.data.error;
+                // }
+                localStorage.setItem("token", JSON.stringify(token.value));      
+                router.push({name:'Home'});
+            
+            })
+            .catch((error)=>{
+                errorMes.value =  error.message;
+            })
+};
+const loginWithEmail = () => {
+    signInWithEmailAndPassword(auth, email.value, password.value)
+    .then(async(data) => {
+        
+        token.value = await data.user.getIdToken();
+        console.log(token.value)
+        localStorage.setItem("token", JSON.stringify(token.value));        
+        router.push({name:'Home'});
+    })
+    .catch((error) => {
+        errorMes.value = error.message;
+    });
+}
+
 const login = async()=>{
-    
     // try{
     //     const response  = await axios.post(`https://apisrv0001.tournamovie.com/login`, 
     //     {
@@ -100,19 +148,16 @@ const login = async()=>{
     // }catch(error){
     //     errorMes.value= error.response.data.error;
     // }   
-    signInWithEmailAndPassword(auth, email.value, password.value)
-        .then((data) => {
-            // const response = await axios.post(`https://apisrv0001.tournamovie.com/login`,{
-            //     "username_or_email": email.value,
-            //     "password": password.value
-            // });
-            localStorage.setItem("token", JSON.stringify(data.user.getIdToken));        
-            router.push({name:'Home'});
-        })
-        .catch((error) => {
-            // const errorCode = error.code;
-            errorMes.value = error.message;
+    if(!userLogedin.value){
+        loginWithEmail();
+    }else{
+        auth.signOut().then(function(){
+            localStorage.clear();
+            loginWithEmail();
+        }).catch(function(error) {
+          errorMes.value =  error.message;
         });
+    }
 };
 
 const registerButton = ()=>{
@@ -124,19 +169,15 @@ const forgotPassword = ()=>{
 };
 
 const googleLogin = ()=>{
-    signInWithPopup(auth, Googleprovider)
-        .then(async(data)=>{
-            // console.log(await(data.user.getIdToken()))
-            token.value = await data.user.getIdToken();
-            console.log(await data.user.getIdToken());
-            console.log(data.user.accessToken);
-            localStorage.setItem("token", JSON.stringify(token.value));      
-            router.push({name:'Home'});
-           
-        })
-        .catch((error)=>{
-            console.log(error.message);
-        })
+    if(!userLogedin.value){
+        loginWithGoogle()
+    }else{
+        auth.signOut().then(function() {
+           loginWithGoogle()
+        }).catch(function(error) {
+            errorMes.value =  error.message;
+        });
+    }    
 }
 const twitterLogin = ()=>{
     signInWithPopup(auth, Twitterprovider)

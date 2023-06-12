@@ -25,7 +25,7 @@ const user = ref([]);
 const userInfoL = ref([]);
 
 onMounted(async()=>{
-  if (localStorage.token) {
+  
     // const response = await axios.get(`https://apisrv0001.tournamovie.com/profile`,
     // {
     //   headers: {
@@ -43,13 +43,12 @@ onMounted(async()=>{
         };
         userName.value = user.value.displayName;
       } else {
-        console.log('the user is signed out')
+        console.log('the user is signed out');
+        router.push({name: 'Home'});
       }
     });
     
-  } else {
-    router.push({name:"Login",});      
-  }
+  
 })
 
 const socket = new WebSocket("wss://apisrv0001.tournamovie.com/websocket/main?jwt=" + token);

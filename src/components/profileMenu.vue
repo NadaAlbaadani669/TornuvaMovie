@@ -27,6 +27,7 @@
 import {ref, watch} from 'vue';
 import { useRouter } from 'vue-router';
 import { userInfoStore } from '../Store/user';
+import {getAuth} from 'firebase/auth';
 
 const props = defineProps({
     userInfoL: Object,
@@ -36,6 +37,7 @@ const props = defineProps({
 const socket = ref(props.socket);
 const userInfoState = userInfoStore();
 const {deleteUser} = userInfoState;
+const auth = getAuth();
 
 const router = useRouter();
 
@@ -43,9 +45,15 @@ const signOut = ()=>{
     socket.value.close(
         console.log("connection Closed"),
     );
-    localStorage.removeItem('token');
-    deleteUser();
-    router.push({name: "Login"});
+    // localStorage.removeItem('token');
+    auth.signOut().then(function() {
+        localStorage.clear();
+        deleteUser();
+        router.push({name: "Login"});
+    }).catch(function(error) {
+        console.log(error.message);
+    });
+    
 }
 
 const deleteUserFirebase = () => {
